@@ -39,6 +39,13 @@ Define a container image reference
 {{- end }}
 
 {{/*
+Define a container image pull secret name
+*/}}
+{{- define "quarkus-microservice.imagePullSecret" -}}
+{{-   .Values.imagePullSecret | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "quarkus-microservice.chart" -}}

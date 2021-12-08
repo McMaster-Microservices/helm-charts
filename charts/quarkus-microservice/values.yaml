@@ -1,6 +1,7 @@
 instance: latest
 image: ""
-
+imagePullSecret: ""
+ 
 service:
   type: ClusterIP
   port: 8080

@@ -47,6 +47,10 @@ spec:
           imagePullPolicy: IfNotPresent
           terminationMessagePolicy: File
           image: {{ include "quarkus-microservice.image" . }}
+          {{ if .Values.imagePullSecret }}
+          imagePullSecrets:
+          - name: {{ include "quarkus-microservice.imagePullSecret" . }}
+          {{ end }} 
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst

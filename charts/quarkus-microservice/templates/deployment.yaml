@@ -19,38 +19,38 @@ spec:
 {{ include "quarkus-microservice.selectorLabels" . | indent 8 }}
     spec:
       containers:
-        - name:  {{ include "quarkus-microservice.name" . }}
-          resources: 
-            {{- toYaml .Values.resources | nindent 12 }}
-          readinessProbe:
-            httpGet:
-              path: /q/health/ready
-              port: 8080
-              scheme: HTTP
-            timeoutSeconds: 1
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 3
-          livenessProbe:
-            httpGet:
-              path: /q/health/live
-              port: 8080
-              scheme: HTTP
-            timeoutSeconds: 1
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 3
-          terminationMessagePath: /dev/termination-log
-          ports:
-            - containerPort: 8080
-              protocol: TCP
-          imagePullPolicy: IfNotPresent
-          terminationMessagePolicy: File
-          image: {{ include "quarkus-microservice.image" . }}
-          {{ if .Values.imagePullSecret }}
-          imagePullSecrets:
-          - name: {{ include "quarkus-microservice.imagePullSecret" . }}
-          {{ end }} 
+      - name:  {{ include "quarkus-microservice.name" . }}
+        resources: 
+          {{- toYaml .Values.resources | nindent 12 }}
+        readinessProbe:
+          httpGet:
+            path: /q/health/ready
+            port: 8080
+            scheme: HTTP
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /q/health/live
+            port: 8080
+            scheme: HTTP
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        terminationMessagePath: /dev/termination-log
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        imagePullPolicy: IfNotPresent
+        terminationMessagePolicy: File
+        image: {{ include "quarkus-microservice.image" . }}
+      {{ if .Values.imagePullSecret }}
+      imagePullSecrets:
+      - name: {{ include "quarkus-microservice.imagePullSecret" . }}
+      {{ end }} 
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst

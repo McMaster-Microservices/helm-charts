@@ -1,0 +1,5 @@
+apiVersion: v2
+name: quarkus-microservice
+version: 0.1.0
+description: Helm chart for Quarkus microservice
+type: application

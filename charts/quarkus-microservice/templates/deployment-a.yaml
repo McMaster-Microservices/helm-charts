@@ -41,10 +41,10 @@ spec:
         image: {{ .Values.aImage }}
         envFrom:
         - secretRef: 
-            name: config-secrets-ab
+            name: {{ .Values.environmentSecretsName }}
             optional: true
       imagePullSecrets:
-      - name: image-pull-secret
+      - name: {{ .Values.imagePullSecretName }}
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst

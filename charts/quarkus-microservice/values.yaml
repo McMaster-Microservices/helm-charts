@@ -2,6 +2,9 @@ name: example-microservice
 namespace: example-microservice
 hostName: example-microservice.apps.ocpprd01.mcmaster.ca
 
+imagePullSecretName: ""
+environmentSecretsName: ""
+
 aImage: ""
 bImage: ""
 

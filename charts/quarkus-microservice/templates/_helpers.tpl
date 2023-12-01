@@ -1,51 +1,4 @@
 {{/*
-Deployment name
-*/}}
-{{- define "quarkus-microservice.name" -}}
-{{-   if .Values.nameOverride -}}
-{{-     .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
-{{-   else -}}
-{{-     .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{-   end -}}
-{{- end -}}
-
-{{/*
-Deployment instance name
-*/}}
-{{- define "quarkus-microservice.instance" -}}
-{{-   if .Values.nameOverride -}}
-{{-     .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
-{{-   else -}}
-{{-     printf "%s-%s" .Release.Name .Values.instance | trunc 63 | trimSuffix "-" -}}
-{{-   end -}}
-{{- end -}}
-
-{{/*
-Create a fully qualified host name.
-*/}}
-{{- define "quarkus-microservice.route-host" -}}
-{{-   if .Values.hostnameOverride }}
-{{-     .Values.hostnameOverride | trunc 63 | trimSuffix "-" }}
-{{-   else }}
-{{-     printf "%s-%s.apps.%s" .Release.Name .Values.instance .Values.clusterIngressDomain }}
-{{-   end }}
-{{- end }}
-
-{{/*
-Define a container image reference
-*/}}
-{{- define "quarkus-microservice.image" -}}
-{{-   .Values.image | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
-Define a container image pull secret name
-*/}}
-{{- define "quarkus-microservice.imagePullSecret" -}}
-{{-   .Values.imagePullSecret | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "quarkus-microservice.chart" -}}
@@ -53,21 +6,62 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
+Create object A name.
+*/}}
+{{- define "quarkus-microservice.a-name" -}}
+{{- printf "%s-%s" .Values.microservice.name "a" }}
+{{- end }}
+
+{{/*
+Create object B name.
+*/}}
+{{- define "quarkus-microservice.b-name" -}}
+{{- printf "%s-%s" .Values.microservice.name "b" }}
+{{- end }}
+
+{{/*
 Common labels
 */}}
 {{- define "quarkus-microservice.labels" -}}
 helm.sh/chart: {{ include "quarkus-microservice.chart" . }}
-{{ include "quarkus-microservice.selectorLabels" . }}
-{{- if .Values.mvnVersion }}
-app.kubernetes.io/version: {{ .Values.mvnVersion | quote }}
-{{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
-Selector labels
+Namespace administrators
 */}}
-{{- define "quarkus-microservice.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "quarkus-microservice.name" . }}
-app.kubernetes.io/instance: {{ .Values.instance }}
+{{- define "quarkus-microservice.admins" -}}
+{{- range $a := .Values.admins }}
+- apiGroup: rbac.authorization.k8s.io
+  kind: User
+  name: {{ $a }}
+{{- end }}
+{{- end }}
+
+{{/*
+Readiness probes
+*/}}
+{{- define "quarkus-microservice.readiness-probe" -}}
+httpGet:
+  path: /q/health/ready
+  port: 8080
+  scheme: HTTP
+timeoutSeconds: 1
+periodSeconds: 10
+successThreshold: 1
+failureThreshold: 3
+{{- end }}
+
+{{/*
+Liveness probes
+*/}}
+{{- define "quarkus-microservice.liveness-probe" -}}
+httpGet:
+  path: /q/health/live
+  port: 8080
+  scheme: HTTP
+timeoutSeconds: 1
+periodSeconds: 10
+successThreshold: 1
+failureThreshold: 18
 {{- end }}

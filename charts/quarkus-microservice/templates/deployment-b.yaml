@@ -3,54 +3,46 @@ apiVersion: apps/v1
 metadata:
   annotations:
     alpha.image.policy.openshift.io/resolve-names: '*'
-  name: {{ include "quarkus-microservice.instance" . }}
+  name: {{ include "quarkus-microservice.b-name" . }}
   labels:
+    app.kubernetes.io/name: {{ .Values.microservice.name }}
+    app.kubernetes.io/instance: b
+    app.kubernetes.io/version: {{ .Values.bVersion | quote }}
     app.openshift.io/runtime: quarkus
 {{ include "quarkus-microservice.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount | default 1 }}
   selector:
     matchLabels:
-{{ include "quarkus-microservice.selectorLabels" . | indent 6 }}
+      app.kubernetes.io/name: {{ .Values.microservice.name }}
+      app.kubernetes.io/instance: b
   template:
     metadata:
       labels:
         log-format: quarkus
-{{ include "quarkus-microservice.selectorLabels" . | indent 8 }}
+        app.kubernetes.io/name: {{ .Values.microservice.name }}
+        app.kubernetes.io/instance: b
     spec:
       containers:
-      - name:  {{ include "quarkus-microservice.name" . }}
+      - name: {{ include "quarkus-microservice.b-name" . }}
         resources: 
-          {{- toYaml .Values.resources | nindent 12 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         readinessProbe:
-          httpGet:
-            path: /q/health/ready
-            port: 8080
-            scheme: HTTP
-          timeoutSeconds: 1
-          periodSeconds: 10
-          successThreshold: 1
-          failureThreshold: 3
+{{ include "quarkus-microservice.readiness-probe" . | indent 10 }}
         livenessProbe:
-          httpGet:
-            path: /q/health/live
-            port: 8080
-            scheme: HTTP
-          timeoutSeconds: 1
-          periodSeconds: 10
-          successThreshold: 1
-          failureThreshold: 3
+{{ include "quarkus-microservice.liveness-probe" . | indent 10 }}
         terminationMessagePath: /dev/termination-log
         ports:
           - containerPort: 8080
             protocol: TCP
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         terminationMessagePolicy: File
-        image: {{ include "quarkus-microservice.image" . }}
-      {{ if .Values.imagePullSecret }}
+        image: {{ .Values.bImage }}
+        envFrom:
+        - secretRef: 
+            name: config-secrets-ab
       imagePullSecrets:
-      - name: {{ include "quarkus-microservice.imagePullSecret" . }}
-      {{ end }} 
+      - name: apisupport-pull-secret
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst

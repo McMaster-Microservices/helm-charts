@@ -1,20 +1,26 @@
-{{ if .Values.clusterIngressDomain }}
-apiVersion: route.openshift.io/v1
 kind: Route
+apiVersion: route.openshift.io/v1
 metadata:
-  name: {{ include "quarkus-microservice.instance" . }}
+  name: {{ .Values.microservice.name }}
   labels:
+    app.kubernetes.io/name: {{ .Values.microservice.name }}
+  annotations:
+    haproxy.router.openshift.io/set-forwarded-headers: if-none
+    haproxy.router.openshift.io/balance: roundrobin
 {{ include "quarkus-microservice.labels" . | indent 4 }}
 spec:
-  host: {{ include "quarkus-microservice.route-host" . }}
-  path: /echo
+  host: {{ .Values.microservice.hostName }}
+  to:
+    kind: Service
+    name: {{ include "quarkus-microservice.a-name" . }}
+    weight: 80
+  alternateBackends:
+  - kind: Service
+    name: {{ include "quarkus-microservice.b-name" . }}
+    weight: 20
   port:
     targetPort: http
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: None
   wildcardPolicy: None
-  to:
-    kind: Service
-    name: {{ include "quarkus-microservice.instance" . }}
-{{ end }}

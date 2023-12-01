@@ -1,10 +1,13 @@
-instance: latest
-image: ""
-imagePullSecret: ""
- 
-service:
-  type: ClusterIP
-  port: 8080
+microservice:
+  name: example-microservice
+  namespace: example-microservice
+  hostName: example-microservice.apps.ocpprd01.mcmaster.ca
+
+aImage: ""
+bImage: ""
+
+aVersion: ""
+bVersion: ""
 
 resources:
   limits:
@@ -14,9 +17,10 @@ resources:
     cpu: 100m
     memory: 128Mi
 
-nameOverride: ""
-fullnameOverride: ""
+replicaCount: 1
 
-nodeSelector: {}
-tolerations: []
-affinity: {}
+admins:
+- arnoldd
+- ngomm
+- mosimat
+- phaml15

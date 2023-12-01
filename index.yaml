@@ -2,6 +2,15 @@ apiVersion: v1
 entries:
   quarkus-microservice:
   - apiVersion: v2
+    created: "2023-12-01T19:24:09.898662665Z"
+    description: Helm chart for McMaster Quarkus microservice with A/B deployment
+    digest: b4059776543769ff8a8eaddc8fd4b0a1ab50359b741d2123952cc3ebe3ddfc04
+    name: quarkus-microservice
+    type: application
+    urls:
+    - https://github.com/McMaster-Microservices/helm-charts/releases/download/quarkus-microservice-0.2.0/quarkus-microservice-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     created: "2021-12-08T20:39:23.528880674Z"
     description: Helm chart for Quarkus microservice
     digest: c77ac68eae85b9456c5cba1dda5a53d20f16073023e492746035d3a59b2a4d82
@@ -28,4 +37,4 @@ entries:
     urls:
     - https://github.com/McMaster-Microservices/helm-charts/releases/download/quarkus-microservice-0.1.2/quarkus-microservice-0.1.2.tgz
     version: 0.1.2
-generated: "2021-12-08T20:39:23.528899275Z"
+generated: "2023-12-01T19:24:09.898681991Z"

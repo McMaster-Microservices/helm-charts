@@ -2,8 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "quarkus-microservice.a-name" . }}
+  namespace: {{ .Values.namespace }}
   labels:
-    app.kubernetes.io/name: {{ .Values.microservice.name }}
+    app.kubernetes.io/name: {{ .Values.name }}
     app.kubernetes.io/instance: a
 {{ include "quarkus-microservice.labels" . | indent 4 }}
 spec:
@@ -14,5 +15,5 @@ spec:
       protocol: TCP
       targetPort: 8080
   selector:
-    app.kubernetes.io/name: {{ .Values.microservice.name }}
+    app.kubernetes.io/name: {{ .Values.name }}
     app.kubernetes.io/instance: a

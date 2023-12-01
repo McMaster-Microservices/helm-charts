@@ -4,8 +4,9 @@ metadata:
   annotations:
     alpha.image.policy.openshift.io/resolve-names: '*'
   name: {{ include "quarkus-microservice.b-name" . }}
+  namespace: {{ .Values.namespace }}
   labels:
-    app.kubernetes.io/name: {{ .Values.microservice.name }}
+    app.kubernetes.io/name: {{ .Values.name }}
     app.kubernetes.io/instance: b
     app.kubernetes.io/version: {{ .Values.bVersion | quote }}
     app.openshift.io/runtime: quarkus
@@ -14,13 +15,13 @@ spec:
   replicas: {{ .Values.replicaCount | default 1 }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ .Values.microservice.name }}
+      app.kubernetes.io/name: {{ .Values.name }}
       app.kubernetes.io/instance: b
   template:
     metadata:
       labels:
         log-format: quarkus
-        app.kubernetes.io/name: {{ .Values.microservice.name }}
+        app.kubernetes.io/name: {{ .Values.name }}
         app.kubernetes.io/instance: b
     spec:
       containers:
@@ -41,6 +42,7 @@ spec:
         envFrom:
         - secretRef: 
             name: config-secrets-ab
+            optional: true
       imagePullSecrets:
       - name: apisupport-pull-secret
       restartPolicy: Always

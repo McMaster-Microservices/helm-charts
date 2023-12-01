@@ -2,9 +2,9 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    app.kubernetes.io/name: academic-calendar
-  name: academic-calendar
-  namespace: academic-calendar-v2
+    app.kubernetes.io/name: {{ .Values.name }}
+  name: {{ .Values.name }}
+  namespace: {{ .Values.namespace }}
 spec:
   endpoints:
   - interval: 30s
@@ -13,4 +13,4 @@ spec:
     path: /q/metrics
   selector:
     matchLabels:
-      app.kubernetes.io/name: academic-calendar
+      app.kubernetes.io/name: {{ .Values.name }}

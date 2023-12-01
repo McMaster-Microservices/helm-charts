@@ -1,7 +1,6 @@
-microservice:
-  name: example-microservice
-  namespace: example-microservice
-  hostName: example-microservice.apps.ocpprd01.mcmaster.ca
+name: example-microservice
+namespace: example-microservice
+hostName: example-microservice.apps.ocpprd01.mcmaster.ca
 
 aImage: ""
 bImage: ""

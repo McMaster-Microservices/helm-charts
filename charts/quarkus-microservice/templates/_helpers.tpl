@@ -9,14 +9,14 @@ Create chart name and version as used by the chart label.
 Create object A name.
 */}}
 {{- define "quarkus-microservice.a-name" -}}
-{{- printf "%s-%s" .Values.microservice.name "a" }}
+{{- printf "%s-%s" .Values.name "a" }}
 {{- end }}
 
 {{/*
 Create object B name.
 */}}
 {{- define "quarkus-microservice.b-name" -}}
-{{- printf "%s-%s" .Values.microservice.name "b" }}
+{{- printf "%s-%s" .Values.name "b" }}
 {{- end }}
 
 {{/*

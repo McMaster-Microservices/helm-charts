@@ -1,15 +1,11 @@
-name: example-microservice
-namespace: example-microservice
-hostName: example-microservice.apps.ocpprd01.mcmaster.ca
+baselineImage: ""
+canaryImage: ""
+
+baselineVersion: ""
+canaryVersion: ""
 
 imagePullSecretName: ""
 environmentSecretsName: ""
-
-aImage: ""
-bImage: ""
-
-aVersion: ""
-bVersion: ""
 
 resources:
   limits:

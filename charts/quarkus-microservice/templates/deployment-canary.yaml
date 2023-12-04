@@ -3,29 +3,29 @@ apiVersion: apps/v1
 metadata:
   annotations:
     alpha.image.policy.openshift.io/resolve-names: '*'
-  name: {{ include "quarkus-microservice.b-name" . }}
-  namespace: {{ .Values.namespace }}
+  name: {{ include "quarkus-microservice.canary-name" . }}
+  namespace: {{ .Release.Name }}
   labels:
-    app.kubernetes.io/name: {{ .Values.name }}
+    app.kubernetes.io/name: {{ .Release.Name }}
     app.kubernetes.io/instance: b
-    app.kubernetes.io/version: {{ .Values.bVersion | quote }}
+    app.kubernetes.io/version: {{ .Values.canaryVersion | quote }}
     app.openshift.io/runtime: quarkus
 {{ include "quarkus-microservice.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount | default 1 }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ .Values.name }}
-      app.kubernetes.io/instance: b
+      app.kubernetes.io/name: {{ .Release.Name }}
+      app.kubernetes.io/instance: canary
   template:
     metadata:
       labels:
         log-format: quarkus
-        app.kubernetes.io/name: {{ .Values.name }}
-        app.kubernetes.io/instance: b
+        app.kubernetes.io/name: {{ .Release.Name }}
+        app.kubernetes.io/instance: canary
     spec:
       containers:
-      - name: {{ include "quarkus-microservice.b-name" . }}
+      - name: {{ include "quarkus-microservice.canary-name" . }}
         resources: 
           {{- toYaml .Values.resources | nindent 10 }}
         readinessProbe:
@@ -38,7 +38,7 @@ spec:
             protocol: TCP
         imagePullPolicy: Always
         terminationMessagePolicy: File
-        image: {{ .Values.bImage }}
+        image: {{ .Values.canaryImage }}
         envFrom:
         - secretRef: 
             name: {{ .Values.environmentSecretsName }}

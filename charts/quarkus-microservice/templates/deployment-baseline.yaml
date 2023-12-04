@@ -3,29 +3,29 @@ apiVersion: apps/v1
 metadata:
   annotations:
     alpha.image.policy.openshift.io/resolve-names: '*'
-  name: {{ include "quarkus-microservice.a-name" . }}
-  namespace: {{ .Values.namespace }}
+  name: {{ include "quarkus-microservice.baseline-name" . }}
+  namespace: {{ .Release.Name }}
   labels:
-    app.kubernetes.io/name: {{ .Values.name }}
-    app.kubernetes.io/instance: a
-    app.kubernetes.io/version: {{ .Values.aVersion | quote }}
+    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/instance: baseline
+    app.kubernetes.io/version: {{ .Values.baselineVersion | quote }}
     app.openshift.io/runtime: quarkus
 {{ include "quarkus-microservice.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount | default 1 }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ .Values.name }}
-      app.kubernetes.io/instance: a
+      app.kubernetes.io/name: {{ .Release.Name }}
+      app.kubernetes.io/instance: baseline
   template:
     metadata:
       labels:
         log-format: quarkus
-        app.kubernetes.io/name: {{ .Values.name }}
-        app.kubernetes.io/instance: a
+        app.kubernetes.io/name: {{ .Release.Name }}
+        app.kubernetes.io/instance: baseline
     spec:
       containers:
-      - name: {{ include "quarkus-microservice.a-name" . }}
+      - name: {{ include "quarkus-microservice.baseline-name" . }}
         resources: 
           {{- toYaml .Values.resources | nindent 10 }}
         readinessProbe:
@@ -38,7 +38,7 @@ spec:
             protocol: TCP
         imagePullPolicy: Always
         terminationMessagePolicy: File
-        image: {{ .Values.aImage }}
+        image: {{ .Values.baselineImage }}
         envFrom:
         - secretRef: 
             name: {{ .Values.environmentSecretsName }}

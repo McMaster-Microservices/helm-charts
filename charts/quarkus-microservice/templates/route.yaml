@@ -1,24 +1,24 @@
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
-  name: {{ .Values.name }}
-  namespace: {{ .Values.namespace }}
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Name }}
   labels:
-    app.kubernetes.io/name: {{ .Values.name }}
+    app.kubernetes.io/name: {{ .Release.Name }}
   annotations:
     haproxy.router.openshift.io/set-forwarded-headers: if-none
     haproxy.router.openshift.io/balance: roundrobin
 {{ include "quarkus-microservice.labels" . | indent 4 }}
 spec:
-  host: {{ .Values.hostName }}
+  host: {{ include "quarkus-microservice.host-name" . }}
   to:
     kind: Service
-    name: {{ include "quarkus-microservice.a-name" . }}
-    weight: 80
+    name: {{ include "quarkus-microservice.baseline-name" . }}
+    weight: 95
   alternateBackends:
   - kind: Service
-    name: {{ include "quarkus-microservice.b-name" . }}
-    weight: 20
+    name: {{ include "quarkus-microservice.canary-name" . }}
+    weight: 5
   port:
     targetPort: http
   tls:

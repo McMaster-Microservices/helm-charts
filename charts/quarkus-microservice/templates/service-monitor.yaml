@@ -2,9 +2,9 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    app.kubernetes.io/name: {{ .Values.name }}
-  name: {{ .Values.name }}
-  namespace: {{ .Values.namespace }}
+    app.kubernetes.io/name: {{ .Release.Name }}
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Name }}
 spec:
   endpoints:
   - interval: 30s
@@ -13,4 +13,4 @@ spec:
     path: /q/metrics
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ .Values.name }}
+      app.kubernetes.io/name: {{ .Release.Name }}

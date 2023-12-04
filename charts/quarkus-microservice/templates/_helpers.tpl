@@ -8,15 +8,15 @@ Create chart name and version as used by the chart label.
 {{/*
 Create object A name.
 */}}
-{{- define "quarkus-microservice.a-name" -}}
-{{- printf "%s-%s" .Values.name "a" }}
+{{- define "quarkus-microservice.baseline-name" -}}
+{{- printf "%s-%s" .Release.Name "baseline" }}
 {{- end }}
 
 {{/*
 Create object B name.
 */}}
-{{- define "quarkus-microservice.b-name" -}}
-{{- printf "%s-%s" .Values.name "b" }}
+{{- define "quarkus-microservice.canary-name" -}}
+{{- printf "%s-%s" .Release.Name "canary" }}
 {{- end }}
 
 {{/*
@@ -64,4 +64,11 @@ timeoutSeconds: 1
 periodSeconds: 10
 successThreshold: 1
 failureThreshold: 18
+{{- end }}
+
+{{/*
+Default host name
+*/}}
+{{- define "quarkus-microservice.host-name" -}}
+{{- printf "%s.apps.ocpprd01.mcmaster.ca" .Release.Name }}
 {{- end }}

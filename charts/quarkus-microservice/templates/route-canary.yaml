@@ -1,0 +1,21 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: {{ include "quarkus-microservice.canary-name" . }}
+  namespace: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+  annotations:
+    haproxy.router.openshift.io/set-forwarded-headers: if-none
+{{ include "quarkus-microservice.labels" . | indent 4 }}
+spec:
+  host: {{ include "quarkus-microservice.canary-host-name" . }}
+  to:
+    kind: Service
+    name: {{ include "quarkus-microservice.canary-name" . }}
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: None
+  wildcardPolicy: None

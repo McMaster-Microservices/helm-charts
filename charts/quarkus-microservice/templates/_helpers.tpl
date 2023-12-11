@@ -72,3 +72,10 @@ Default host name
 {{- define "quarkus-microservice.host-name" -}}
 {{- printf "%s.apps.ocpprd01.mcmaster.ca" .Release.Name }}
 {{- end }}
+
+{{/*
+Canary only host name
+*/}}
+{{- define "quarkus-microservice.canary-host-name" -}}
+{{- printf "%s-%s.apps.ocpprd01.mcmaster.ca" .Release.Name "canary" }}
+{{- end }}

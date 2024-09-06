@@ -28,6 +28,13 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Route configurations
+*/}}
+{{- define "quarkus-microservice.route-annotations" -}}
+haproxy.router.openshift.io/timeout: {{ .Values.routeTimeout }}
+{{- end }}
+
+{{/*
 Namespace administrators
 */}}
 {{- define "quarkus-microservice.admins" -}}

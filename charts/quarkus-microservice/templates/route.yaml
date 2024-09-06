@@ -9,6 +9,7 @@ metadata:
     haproxy.router.openshift.io/set-forwarded-headers: if-none
     haproxy.router.openshift.io/balance: roundrobin
 {{ include "quarkus-microservice.labels" . | indent 4 }}
+{{ include "quarkus-microservice.route-annotations . | indent 4 }}
 spec:
   host: {{ include "quarkus-microservice.host-name" . }}
   to:

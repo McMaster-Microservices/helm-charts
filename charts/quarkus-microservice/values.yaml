@@ -22,3 +22,5 @@ admins:
 - ngomm
 - mosimat
 - phaml15
+
+routeTimeout: "60s"

@@ -82,4 +82,15 @@ entries:
     urls:
     - https://github.com/McMaster-Microservices/helm-charts/releases/download/quarkus-microservice-0.1.2/quarkus-microservice-0.1.2.tgz
     version: 0.1.2
-generated: "2024-09-06T13:40:54.371664235Z"
+  quarkus-nshield-microservice:
+  - apiVersion: v2
+    created: "2025-01-06T18:32:31.337498627Z"
+    description: Helm chart for McMaster Quarkus microservice with canary deployments.  Includes
+      nShield nSaaS.
+    digest: b3e4b98718df81342b2057478eec02a5ffd936bf9357c5b785a087043f03aeea
+    name: quarkus-nshield-microservice
+    type: application
+    urls:
+    - https://github.com/McMaster-Microservices/helm-charts/releases/download/quarkus-nshield-microservice-0.2.5/quarkus-nshield-microservice-0.2.5.tgz
+    version: 0.2.5
+generated: "2025-01-06T18:32:31.337522591Z"

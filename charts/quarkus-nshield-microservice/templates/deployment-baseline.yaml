@@ -1,0 +1,105 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/vcs-uri: {{ .Values.vcsUri }}
+    app.openshift.io/vcs-ref: {{ .Values.baselineCommitId }}
+  name: {{ include "quarkus-microservice.baseline-name" . }}
+  namespace: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/instance: baseline
+    app.kubernetes.io/version: {{ .Values.baselineVersion | quote }}
+    app.openshift.io/runtime: quarkus
+{{ include "quarkus-microservice.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Release.Name }}
+      app.kubernetes.io/instance: baseline
+  template:
+    metadata:
+      annotations:
+        app.openshift.io/vcs-uri: {{ .Values.vcsUri }}
+        app.openshift.io/vcs-ref: {{ .Values.baselineCommitId }}
+      labels:
+        log-format: quarkus
+        app.kubernetes.io/name: {{ .Release.Name }}
+        app.kubernetes.io/instance: baseline
+        app.kubernetes.io/version: {{ .Values.baselineVersion | quote }}
+        app.openshift.io/runtime: quarkus
+    spec:
+      containers:
+      - name: nshield-hwsp
+        image: 'ghcr.io/uts-integration-services/nshield-hwsp:latest'
+        command:
+          - /opt/nfast/sbin/nshield-start
+        resources: {}
+        volumeMounts:
+          - name: nshield-config
+            mountPath: /opt/nfast/kmdata/config
+          - name: nshield-hardserver
+            mountPath: /opt/nfast/kmdata/hardserver.d
+          - name: nshield-sockets
+            mountPath: /opt/nfast/sockets
+          - name: nshield-kneti
+            mountPath: /opt/nfast/hardserver.d
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        imagePullPolicy: Always
+      - name: {{ include "quarkus-microservice.baseline-name" . }}
+        resources: 
+          {{- toYaml .Values.resources | nindent 10 }}
+        volumeMounts:
+          - name: nshield-config
+            mountPath: /opt/nfast/kmdata/config
+          - name: nshield-kmdata
+            mountPath: /opt/nfast/kmdata
+          - name: nshield-sockets
+            mountPath: /opt/nfast/sockets
+        readinessProbe:
+{{ include "quarkus-microservice.readiness-probe" . | indent 10 }}
+        livenessProbe:
+{{ include "quarkus-microservice.liveness-probe" . | indent 10 }}
+        terminationMessagePath: /dev/termination-log
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        imagePullPolicy: Always
+        terminationMessagePolicy: File
+        image: {{ .Values.baselineImage }}
+        envFrom:
+        - secretRef: 
+            name: {{ .Values.environmentSecretsName }}
+            optional: true
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecretName }}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+      volumes:
+      - name: nshield-config
+        configMap:
+          name: nshield-config
+          defaultMode: 420
+      - name: nshield-hardserver
+        emptyDir: {}
+      - name: nshield-sockets
+        emptyDir: {}
+      - name: nshield-kmdata
+        persistentVolumeClaim:
+          claimName: nshield-kmdata
+      - name: nshield-kneti
+        persistentVolumeClaim:
+          claimName: nshield-kneti
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

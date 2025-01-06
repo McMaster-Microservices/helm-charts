@@ -1,0 +1,23 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nshield-config
+data:
+  config: |
+    syntax-version=1
+    
+    [nethsm_imports]
+    local_module=1
+    remote_esn=720E-05E0-D947
+    remote_ip=216.117.57.187
+    remote_port=9004
+    keyhash=58c7e866ab888c26013b40ef2ee8e247d0d8eecd
+    privileged=0
+    -
+    local_module=2
+    remote_esn=5110-05E0-D947
+    remote_ip=148.66.194.187
+    remote_port=9004
+    keyhash=878b215852548afed1a712fc8745d7f7af93499e
+    privileged=0
+    
